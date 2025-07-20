@@ -127,7 +127,8 @@ class VoiceNavigator {
         // Stop listening during command processing to prevent interference
         this.stopListening();
 
-        if (command.includes('openai') || command.includes('open ai') || command.includes('chat')) {
+        if (command.includes('openai') || command.includes('open ai') || command.includes('chat') || 
+            command.includes('open a') || command.includes('ai')) {
             this.navigateToChat();
             return; // Prevent restart of listening
         } else if (command.includes('return back to home') || command.includes('go back to home') || command.includes('home')) {
@@ -148,16 +149,16 @@ class VoiceNavigator {
         this.stopListening(); // Stop listening immediately
         this.recognition = null; // Prevent restart attempts
         
-        this.speakText('Opening OpenAI chat');
         this.updateVoiceIndicator('processing');
 
         // Add navigation animation
-        document.body.style.transition = 'opacity 0.5s ease-out';
+        document.body.style.transition = 'opacity 0.3s ease-out';
         document.body.style.opacity = '0';
 
+        // Navigate immediately without waiting for speech
         setTimeout(() => {
             window.location.href = '/chat';
-        }, 1000); // Slightly longer delay to ensure speech starts
+        }, 300);
     }
 
     navigateToHome() {
@@ -165,16 +166,16 @@ class VoiceNavigator {
         this.stopListening(); // Stop listening immediately
         this.recognition = null; // Prevent restart attempts
         
-        this.speakText('Returning to home page');
         this.updateVoiceIndicator('processing');
 
         // Add navigation animation
-        document.body.style.transition = 'opacity 0.5s ease-out';
+        document.body.style.transition = 'opacity 0.3s ease-out';
         document.body.style.opacity = '0';
 
+        // Navigate immediately without waiting for speech
         setTimeout(() => {
             window.location.href = '/';
-        }, 1000); // Slightly longer delay to ensure speech starts
+        }, 300);
     }
 
     updateVoiceIndicator(state) {
