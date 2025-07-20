@@ -2,9 +2,14 @@ class VoiceNavigator {
     constructor() {
         this.recognition = null;
         this.isListening = false;
+        this.shouldStop = false;
         this.initSpeechRecognition();
         this.initAnimations();
-        this.startListening();
+        
+        // Start listening after a short delay to ensure everything is initialized
+        setTimeout(() => {
+            this.startListening();
+        }, 500);
     }
 
     initAnimations() {
@@ -74,46 +79,63 @@ class VoiceNavigator {
             console.log('Speech recognition error:', event.error);
             this.isListening = false;
             
-            // Only restart for certain errors, avoid rapid restarts
-            if (event.error === 'no-speech' || event.error === 'audio-capture') {
+            // Don't restart for aborted errors (usually means we stopped intentionally)
+            if (event.error === 'aborted') {
+                return;
+            }
+            
+            // For no-speech errors, restart with longer delay to avoid loops
+            if (event.error === 'no-speech') {
                 setTimeout(() => {
-                    this.startListening();
-                }, 2000);
-            } else if (event.error !== 'aborted') {
-                // For other errors except 'aborted', try to restart after longer delay
-                setTimeout(() => {
-                    this.startListening();
+                    if (this.recognition) { // Only restart if not destroyed
+                        this.startListening();
+                    }
                 }, 3000);
+                return;
+            }
+            
+            // For other errors, restart with delay
+            if (event.error === 'audio-capture' || event.error === 'not-allowed') {
+                this.updateVoiceIndicator('error');
+                setTimeout(() => {
+                    if (this.recognition) {
+                        this.startListening();
+                    }
+                }, 5000);
             }
         };
 
         this.recognition.onend = () => {
             this.isListening = false;
-            // Only restart if not intentionally stopped
-            if (this.recognition) {
+            // Only restart if recognition object exists and we haven't stopped intentionally
+            if (this.recognition && !this.shouldStop) {
                 setTimeout(() => {
                     this.startListening();
-                }, 1000);
+                }, 1500);
             }
         };
     }
 
     startListening() {
-        if (!this.recognition || this.isListening) return;
+        if (!this.recognition || this.isListening || this.shouldStop) return;
 
         try {
+            this.shouldStop = false;
             this.recognition.start();
             this.isListening = true;
             this.updateVoiceIndicator('listening');
         } catch (error) {
             console.log('Failed to start recognition:', error);
-            setTimeout(() => {
-                this.startListening();
-            }, 2000);
+            if (!this.shouldStop) {
+                setTimeout(() => {
+                    this.startListening();
+                }, 3000);
+            }
         }
     }
 
     stopListening() {
+        this.shouldStop = true;
         if (this.recognition && this.isListening) {
             this.recognition.stop();
             this.isListening = false;
@@ -183,6 +205,22 @@ class VoiceNavigator {
         if (!indicator) return;
 
         indicator.className = `voice-orb-advanced ${state}`;
+        
+        // Update command display based on state
+        const commandContent = document.querySelector('.command-content');
+        if (commandContent) {
+            switch(state) {
+                case 'listening':
+                    commandContent.textContent = 'Say "OpenAI" to start chatting';
+                    break;
+                case 'processing':
+                    commandContent.textContent = 'Processing command...';
+                    break;
+                case 'error':
+                    commandContent.textContent = 'Microphone error - Retrying...';
+                    break;
+            }
+        }
     }
 
     speakText(text) {
