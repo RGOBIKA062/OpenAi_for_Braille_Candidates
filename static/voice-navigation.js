@@ -64,8 +64,10 @@ class VoiceNavigator {
         
         if (command.includes('openai') || command.includes('open ai') || command.includes('chat')) {
             this.navigateToChat();
+        } else if (command.includes('return back to home') || command.includes('go back to home') || command.includes('home')) {
+            this.navigateToHome();
         } else if (command.includes('help') || command.includes('commands')) {
-            this.speakText('Available commands: Say OpenAI to start chatting. Say help for this message.');
+            this.speakText('Available commands: Say OpenAI to start chatting. Say return back to home page to go home. Say help for this message.');
         }
     }
 
@@ -79,6 +81,19 @@ class VoiceNavigator {
         
         setTimeout(() => {
             window.location.href = '/chat';
+        }, 500);
+    }
+
+    navigateToHome() {
+        this.speakText('Returning to home page');
+        this.updateVoiceIndicator('processing');
+        
+        // Add navigation animation
+        document.body.style.transition = 'opacity 0.5s ease-out';
+        document.body.style.opacity = '0';
+        
+        setTimeout(() => {
+            window.location.href = '/';
         }, 500);
     }
 
@@ -106,8 +121,28 @@ class VoiceNavigator {
         if ('speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 0.9;
-            utterance.pitch = 1;
+            utterance.pitch = 1.2;
             utterance.volume = 0.8;
+            
+            // Choose a female voice if available
+            const voices = speechSynthesis.getVoices();
+            const femaleVoice = voices.find(voice => 
+                voice.name.toLowerCase().includes('female') ||
+                voice.name.toLowerCase().includes('zira') ||
+                voice.name.toLowerCase().includes('hazel') ||
+                voice.name.toLowerCase().includes('samantha') ||
+                voice.name.toLowerCase().includes('karen') ||
+                voice.name.toLowerCase().includes('moira') ||
+                voice.name.toLowerCase().includes('tessa') ||
+                voice.name.toLowerCase().includes('veena') ||
+                voice.name.toLowerCase().includes('susan') ||
+                voice.name.toLowerCase().includes('fiona')
+            );
+            
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+            
             speechSynthesis.speak(utterance);
         }
     }

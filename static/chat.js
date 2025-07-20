@@ -86,7 +86,7 @@ class VoiceChat {
             return;
         }
 
-        if (command === 'home' || command === 'back') {
+        if (command === 'home' || command === 'back' || command.includes('return back to home') || command.includes('go back to home')) {
             this.navigateHome();
             return;
         }
@@ -186,19 +186,26 @@ class VoiceChat {
             
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 0.9;
-            utterance.pitch = 1;
+            utterance.pitch = 1.2;
             utterance.volume = 0.8;
             
-            // Choose a better voice if available
+            // Choose a female voice if available
             const voices = speechSynthesis.getVoices();
-            const preferredVoice = voices.find(voice => 
-                voice.name.includes('Google') || 
-                voice.name.includes('Microsoft') ||
-                voice.lang.includes('en-US')
+            const femaleVoice = voices.find(voice => 
+                voice.name.toLowerCase().includes('female') ||
+                voice.name.toLowerCase().includes('zira') ||
+                voice.name.toLowerCase().includes('hazel') ||
+                voice.name.toLowerCase().includes('samantha') ||
+                voice.name.toLowerCase().includes('karen') ||
+                voice.name.toLowerCase().includes('moira') ||
+                voice.name.toLowerCase().includes('tessa') ||
+                voice.name.toLowerCase().includes('veena') ||
+                voice.name.toLowerCase().includes('susan') ||
+                voice.name.toLowerCase().includes('fiona')
             );
             
-            if (preferredVoice) {
-                utterance.voice = preferredVoice;
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
             }
             
             speechSynthesis.speak(utterance);
