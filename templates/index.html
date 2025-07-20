@@ -1,0 +1,56 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI for Braille - Voice Accessible AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="hero-section">
+            <div class="floating-orb"></div>
+            <div class="floating-orb orb-2"></div>
+            <div class="floating-orb orb-3"></div>
+            
+            <h1 class="main-title">
+                <span class="title-word">Open</span>
+                <span class="title-word">AI</span>
+                <span class="title-subtitle">for Braille</span>
+            </h1>
+            
+            <p class="description">Voice-Powered AI Assistant for the Visually Impaired</p>
+            
+            <div class="voice-indicator">
+                <div class="pulse-ring"></div>
+                <div class="voice-icon">🎤</div>
+            </div>
+            
+            <p class="instruction">Say "OpenAI" to start chatting</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🗣️</div>
+                <h3>Voice Control</h3>
+                <p>Navigate entirely through voice commands</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>Smart AI</h3>
+                <p>Powered by advanced Llama 3.1 model</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">♿</div>
+                <h3>Accessible</h3>
+                <p>Designed specifically for Braille users</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='voice-navigation.js') }}"></script>
+</body>
+</html>

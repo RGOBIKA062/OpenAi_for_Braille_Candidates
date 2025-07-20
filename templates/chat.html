@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - OpenAI for Braille</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <header class="chat-header">
+            <div class="header-content">
+                <h1>AI Assistant</h1>
+                <div class="status-indicator">
+                    <div class="status-dot listening"></div>
+                    <span id="status-text">Listening...</span>
+                </div>
+            </div>
+        </header>
+        
+        <main class="chat-main">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai-message welcome-message">
+                    <div class="message-content">
+                        <p>Hello! I'm your AI assistant. Ask me anything or say "help" for commands.</p>
+                    </div>
+                    <div class="message-timestamp">Just now</div>
+                </div>
+            </div>
+            
+            <div class="voice-controls">
+                <div class="voice-visualizer">
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                    <div class="wave"></div>
+                </div>
+                
+                <div class="control-info">
+                    <p>Voice Commands: "Stop", "Help", "Elaborate [topic]"</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+</body>
+</html>
