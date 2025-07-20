@@ -72,18 +72,29 @@ class VoiceNavigator {
 
         this.recognition.onerror = (event) => {
             console.log('Speech recognition error:', event.error);
-            if (event.error === 'no-speech') {
+            this.isListening = false;
+            
+            // Only restart for certain errors, avoid rapid restarts
+            if (event.error === 'no-speech' || event.error === 'audio-capture') {
                 setTimeout(() => {
                     this.startListening();
-                }, 1000);
+                }, 2000);
+            } else if (event.error !== 'aborted') {
+                // For other errors except 'aborted', try to restart after longer delay
+                setTimeout(() => {
+                    this.startListening();
+                }, 3000);
             }
         };
 
         this.recognition.onend = () => {
             this.isListening = false;
-            setTimeout(() => {
-                this.startListening();
-            }, 500);
+            // Only restart if not intentionally stopped
+            if (this.recognition) {
+                setTimeout(() => {
+                    this.startListening();
+                }, 1000);
+            }
         };
     }
 
@@ -102,19 +113,41 @@ class VoiceNavigator {
         }
     }
 
-    processCommand(command) {
-        this.updateVoiceIndicator('processing');
-
-        if (command.includes('openai') || command.includes('open ai') || command.includes('chat')) {
-            this.navigateToChat();
-        } else if (command.includes('return back to home') || command.includes('go back to home') || command.includes('home')) {
-            this.navigateToHome();
-        } else if (command.includes('help') || command.includes('commands')) {
-            this.speakText('Available commands: Say OpenAI to start chatting. Say return back to home page to go home. Say help for this message.');
+    stopListening() {
+        if (this.recognition && this.isListening) {
+            this.recognition.stop();
+            this.isListening = false;
         }
     }
 
+    processCommand(command) {
+        this.updateVoiceIndicator('processing');
+        console.log('Processing command:', command);
+
+        // Stop listening during command processing to prevent interference
+        this.stopListening();
+
+        if (command.includes('openai') || command.includes('open ai') || command.includes('chat')) {
+            this.navigateToChat();
+            return; // Prevent restart of listening
+        } else if (command.includes('return back to home') || command.includes('go back to home') || command.includes('home')) {
+            this.navigateToHome();
+            return; // Prevent restart of listening
+        } else if (command.includes('help') || command.includes('commands')) {
+            this.speakText('Available commands: Say OpenAI to start chatting. Say return back to home page to go home. Say help for this message.');
+        }
+
+        // Resume listening after a delay for non-navigation commands
+        setTimeout(() => {
+            this.startListening();
+        }, 2000);
+    }
+
     navigateToChat() {
+        console.log('Navigating to chat...');
+        this.stopListening(); // Stop listening immediately
+        this.recognition = null; // Prevent restart attempts
+        
         this.speakText('Opening OpenAI chat');
         this.updateVoiceIndicator('processing');
 
@@ -124,10 +157,14 @@ class VoiceNavigator {
 
         setTimeout(() => {
             window.location.href = '/chat';
-        }, 500);
+        }, 1000); // Slightly longer delay to ensure speech starts
     }
 
     navigateToHome() {
+        console.log('Navigating to home...');
+        this.stopListening(); // Stop listening immediately
+        this.recognition = null; // Prevent restart attempts
+        
         this.speakText('Returning to home page');
         this.updateVoiceIndicator('processing');
 
@@ -137,7 +174,7 @@ class VoiceNavigator {
 
         setTimeout(() => {
             window.location.href = '/';
-        }, 500);
+        }, 1000); // Slightly longer delay to ensure speech starts
     }
 
     updateVoiceIndicator(state) {
