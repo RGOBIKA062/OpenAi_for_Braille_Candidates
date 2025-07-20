@@ -7,13 +7,17 @@ import os
 from gtts import gTTS
 import io
 import base64
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
-# Groq API configuration
-GROQ_API_KEY = "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"
-GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
+# Groq API configuration from environment variables
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
+GROQ_API_URL = os.getenv('GROQ_API_URL', 'https://api.groq.com/openai/v1/chat/completions')
 
 @app.route('/')
 def index():
@@ -128,4 +132,8 @@ def text_to_speech():
         return jsonify({'error': 'Failed to generate speech'}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(
+        host=os.getenv('FLASK_HOST', '0.0.0.0'),
+        port=int(os.getenv('FLASK_PORT', 5000)),
+        debug=os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
+    )
