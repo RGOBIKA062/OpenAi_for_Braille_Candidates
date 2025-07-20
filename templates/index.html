@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,82 +7,67 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="animated-background"></div>
+
+    <!-- Holographic Overlay -->
+    <div class="holographic-overlay"></div>
+
+    <!-- Digital Rain Effect -->
+    <div class="digital-rain" id="digitalRain"></div>
+
+    <!-- 3D Geometric Shapes -->
+    <div class="geometric-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
     <div class="container">
         <div class="hero-section">
-            <!-- Neural Network Animation -->
-            <div class="neural-network">
-                <!-- Neural Nodes -->
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                <div class="neural-node"></div>
-                
-                <!-- Neural Connections -->
-                <div class="neural-connection"></div>
-                <div class="neural-connection"></div>
-                <div class="neural-connection"></div>
-                <div class="neural-connection"></div>
-                <div class="neural-connection"></div>
-                <div class="neural-connection"></div>
-            </div>
-            
-            <!-- AI Particles -->
-            <div class="ai-particles">
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-            </div>
-            
-            <h1 class="main-title"></h1>
-                <span class="title-word">Open</span>
-                <span class="title-word">AI</span>
+            <h1 class="main-title">
+                <span class="title-word" data-text="Open">Open</span>
+                <span class="title-word" data-text="AI">AI</span>
                 <span class="title-subtitle">for Braille</span>
             </h1>
-            
+
             <p class="description">Voice-Powered AI Assistant for the Visually Impaired</p>
-            
+
             <div class="voice-indicator">
-                <div class="pulse-ring"></div>
-                <div class="voice-icon">🎤</div>
+                <div class="energy-waves">
+                    <div class="energy-wave"></div>
+                    <div class="energy-wave"></div>
+                    <div class="energy-wave"></div>
+                </div>
+                <div class="voice-orb">🎤</div>
             </div>
-            
+
             <p class="instruction">Say "OpenAI" to start chatting</p>
         </div>
-        
+
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-icon">🗣️</div>
                 <h3>Voice Control</h3>
-                <p>Navigate entirely through voice commands</p>
+                <p>Navigate entirely through voice commands with advanced speech recognition</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="feature-icon">🧠</div>
                 <h3>Smart AI</h3>
-                <p>Powered by advanced Llama 3.1 model</p>
+                <p>Powered by advanced Llama 3.1 model for intelligent conversations</p>
             </div>
-            
+
             <div class="feature-card">
                 <div class="feature-icon">♿</div>
                 <h3>Accessible</h3>
-                <p>Designed specifically for Braille users</p>
+                <p>Designed specifically for visually impaired users with audio feedback</p>
             </div>
         </div>
     </div>
-    
+
     <script src="{{ url_for('static', filename='voice-navigation.js') }}"></script>
 </body>
 </html>

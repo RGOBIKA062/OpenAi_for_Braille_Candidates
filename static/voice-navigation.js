@@ -156,14 +156,152 @@ class VoiceNavigator {
 // Initialize voice navigation when page loads
 document.addEventListener('DOMContentLoaded', () => {
     new VoiceNavigator();
+    initializeDigitalRain();
 });
 
-// Add loading animation
+// Digital Rain Effect
+function initializeDigitalRain() {
+    const rainContainer = document.getElementById('digitalRain');
+    const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+    const columnCount = Math.floor(window.innerWidth / 20);
+    
+    for (let i = 0; i < columnCount; i++) {
+        createRainColumn(i, rainContainer, characters);
+    }
+}
+
+function createRainColumn(columnIndex, container, chars) {
+    const column = document.createElement('div');
+    column.style.position = 'absolute';
+    column.style.left = columnIndex * 20 + 'px';
+    column.style.top = '-100px';
+    column.style.width = '20px';
+    
+    const dropCount = Math.floor(Math.random() * 20) + 10;
+    
+    for (let i = 0; i < dropCount; i++) {
+        setTimeout(() => {
+            const drop = document.createElement('div');
+            drop.className = 'rain-drop';
+            drop.textContent = chars[Math.floor(Math.random() * chars.length)];
+            drop.style.left = columnIndex * 20 + Math.random() * 10 + 'px';
+            drop.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            drop.style.animationDelay = Math.random() * 2 + 's';
+            
+            container.appendChild(drop);
+            
+            setTimeout(() => {
+                if (drop.parentNode) {
+                    drop.parentNode.removeChild(drop);
+                }
+            }, 5000);
+        }, i * 200 + Math.random() * 1000);
+    }
+    
+    // Restart column after delay
+    setTimeout(() => {
+        createRainColumn(columnIndex, container, chars);
+    }, (dropCount * 200) + Math.random() * 3000 + 5000);
+}
+
+// Enhanced loading animation
 window.addEventListener('load', () => {
     document.body.style.opacity = '0';
-    document.body.style.transition = 'opacity 0.8s ease-in';
+    document.body.style.transition = 'opacity 1.2s ease-in';
+    
+    // Create loading particles effect
+    const loadingEffect = document.createElement('div');
+    loadingEffect.style.position = 'fixed';
+    loadingEffect.style.top = '0';
+    loadingEffect.style.left = '0';
+    loadingEffect.style.width = '100%';
+    loadingEffect.style.height = '100%';
+    loadingEffect.style.background = 'radial-gradient(circle, rgba(0,255,255,0.3) 0%, transparent 70%)';
+    loadingEffect.style.zIndex = '1000';
+    loadingEffect.style.transition = 'opacity 1s ease-out';
+    document.body.appendChild(loadingEffect);
     
     setTimeout(() => {
         document.body.style.opacity = '1';
-    }, 100);
+        loadingEffect.style.opacity = '0';
+        
+        setTimeout(() => {
+            if (loadingEffect.parentNode) {
+                loadingEffect.parentNode.removeChild(loadingEffect);
+            }
+        }, 1000);
+    }, 200);
+    
+    // Add particle burst effect on load
+    setTimeout(() => {
+        createParticleBurst();
+    }, 1500);
+});
+
+function createParticleBurst() {
+    const burstContainer = document.createElement('div');
+    burstContainer.style.position = 'fixed';
+    burstContainer.style.top = '50%';
+    burstContainer.style.left = '50%';
+    burstContainer.style.transform = 'translate(-50%, -50%)';
+    burstContainer.style.pointerEvents = 'none';
+    burstContainer.style.zIndex = '10';
+    document.body.appendChild(burstContainer);
+    
+    for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.style.position = 'absolute';
+        particle.style.width = '4px';
+        particle.style.height = '4px';
+        particle.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        particle.style.borderRadius = '50%';
+        particle.style.boxShadow = '0 0 10px currentColor';
+        
+        const angle = (i / 12) * Math.PI * 2;
+        const distance = 100 + Math.random() * 100;
+        const duration = 1 + Math.random() * 0.5;
+        
+        particle.style.animation = `
+            particleBurst ${duration}s ease-out forwards
+        `;
+        
+        particle.style.setProperty('--end-x', Math.cos(angle) * distance + 'px');
+        particle.style.setProperty('--end-y', Math.sin(angle) * distance + 'px');
+        
+        burstContainer.appendChild(particle);
+    }
+    
+    // Add CSS animation for particle burst
+    if (!document.getElementById('particleBurstStyle')) {
+        const style = document.createElement('style');
+        style.id = 'particleBurstStyle';
+        style.textContent = `
+            @keyframes particleBurst {
+                0% {
+                    transform: translate(0, 0) scale(1);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(var(--end-x), var(--end-y)) scale(0);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    setTimeout(() => {
+        if (burstContainer.parentNode) {
+            burstContainer.parentNode.removeChild(burstContainer);
+        }
+    }, 2000);
+}
+
+// Responsive adjustments
+window.addEventListener('resize', () => {
+    const rainContainer = document.getElementById('digitalRain');
+    if (rainContainer) {
+        rainContainer.innerHTML = '';
+        setTimeout(initializeDigitalRain, 100);
+    }
 });
