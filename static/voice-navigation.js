@@ -64,7 +64,7 @@ class VoiceNavigator {
         
         if (command.includes('openai') || command.includes('open ai') || command.includes('chat')) {
             this.navigateToChat();
-        } else if (command.includes('return back to home') || command.includes('go back to home') || command.includes('home')) {
+        } else if (command.includes('home') || command.includes('back') || command.includes('return')) {
             this.navigateToHome();
         } else if (command.includes('help') || command.includes('commands')) {
             this.speakText('Available commands: Say OpenAI to start chatting. Say return back to home page to go home. Say help for this message.');

@@ -86,7 +86,7 @@ class VoiceChat {
             return;
         }
 
-        if (command === 'home' || command === 'back' || command.includes('return back to home') || command.includes('go back to home')) {
+        if (command.includes('home') || command.includes('back') || command.includes('return')) {
             this.navigateHome();
             return;
         }
