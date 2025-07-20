@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,63 +8,147 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <!-- Animated Background -->
-    <div class="animated-background"></div>
-
-    <!-- Holographic Overlay -->
-    <div class="holographic-overlay"></div>
-
-    <!-- Digital Rain Effect -->
-    <div class="digital-rain" id="digitalRain"></div>
-
-    <!-- 3D Geometric Shapes -->
-    <div class="geometric-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
+    <!-- Neural Network Background -->
+    <div class="neural-network">
+        <canvas id="neuralCanvas"></canvas>
     </div>
 
+    <!-- Particle System -->
+    <div class="particle-system" id="particleSystem"></div>
+
+    <!-- Holographic Grid -->
+    <div class="holographic-grid"></div>
+
+    <!-- Matrix Rain -->
+    <div class="matrix-rain" id="matrixRain"></div>
+
+    <!-- Main Content -->
     <div class="container">
+        <!-- Navigation Dots -->
+        <div class="nav-dots">
+            <div class="nav-dot active"></div>
+            <div class="nav-dot"></div>
+            <div class="nav-dot"></div>
+        </div>
+
         <div class="hero-section">
+            <!-- Logo Animation -->
+            <div class="logo-container">
+                <div class="logo-orb">
+                    <div class="logo-core">AI</div>
+                    <div class="logo-ring ring-1"></div>
+                    <div class="logo-ring ring-2"></div>
+                    <div class="logo-ring ring-3"></div>
+                </div>
+            </div>
+
+            <!-- Title with Morphing Text -->
             <h1 class="main-title">
-                <span class="title-word" data-text="Open">Open</span>
-                <span class="title-word" data-text="AI">AI</span>
+                <span class="morphing-text" data-words="OpenAI,VoiceAI,SmartAI">OpenAI</span>
                 <span class="title-subtitle">for Braille</span>
             </h1>
 
-            <p class="description">Voice-Powered AI Assistant for the Visually Impaired</p>
+            <!-- Subtitle with Typewriter Effect -->
+            <p class="description">
+                <span class="typewriter" data-text="Voice-Powered AI Assistant for the Visually Impaired">
+                    <span class="cursor">|</span>
+                </span>
+            </p>
 
-            <div class="voice-indicator">
-                <div class="energy-waves">
-                    <div class="energy-wave"></div>
-                    <div class="energy-wave"></div>
-                    <div class="energy-wave"></div>
+            <!-- Advanced Voice Indicator -->
+            <div class="voice-control-center">
+                <div class="voice-spectrum">
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
                 </div>
-                <div class="voice-orb">🎤</div>
+                
+                <div class="voice-orb-advanced">
+                    <div class="orb-pulse"></div>
+                    <div class="orb-core">
+                        <div class="microphone-icon">🎤</div>
+                    </div>
+                    <div class="orb-rings">
+                        <div class="orb-ring"></div>
+                        <div class="orb-ring"></div>
+                        <div class="orb-ring"></div>
+                    </div>
+                </div>
+
+                <div class="voice-spectrum">
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                    <div class="spectrum-bar"></div>
+                </div>
             </div>
 
-            <p class="instruction">Say "OpenAI" to start chatting</p>
+            <!-- Interactive Command Display -->
+            <div class="command-display">
+                <div class="command-text">
+                    <span class="command-prompt">$</span>
+                    <span class="command-content">Say "OpenAI" to start chatting</span>
+                </div>
+                <div class="command-indicator"></div>
+            </div>
         </div>
 
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">🗣️</div>
+        <!-- Advanced Feature Cards -->
+        <div class="features-constellation">
+            <div class="feature-card-advanced" data-feature="voice">
+                <div class="card-background"></div>
+                <div class="card-glow"></div>
+                <div class="feature-icon-advanced">
+                    <div class="icon-wrapper">🗣️</div>
+                </div>
                 <h3>Voice Control</h3>
                 <p>Navigate entirely through voice commands with advanced speech recognition</p>
+                <div class="card-particles"></div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">🧠</div>
+            <div class="feature-card-advanced" data-feature="ai">
+                <div class="card-background"></div>
+                <div class="card-glow"></div>
+                <div class="feature-icon-advanced">
+                    <div class="icon-wrapper">🧠</div>
+                </div>
                 <h3>Smart AI</h3>
                 <p>Powered by advanced Llama 3.1 model for intelligent conversations</p>
+                <div class="card-particles"></div>
             </div>
 
-            <div class="feature-card">
-                <div class="feature-icon">♿</div>
+            <div class="feature-card-advanced" data-feature="accessible">
+                <div class="card-background"></div>
+                <div class="card-glow"></div>
+                <div class="feature-icon-advanced">
+                    <div class="icon-wrapper">♿</div>
+                </div>
                 <h3>Accessible</h3>
                 <p>Designed specifically for visually impaired users with audio feedback</p>
+                <div class="card-particles"></div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-dot online"></div>
+                <span>AI Online</span>
+            </div>
+            <div class="status-item">
+                <div class="status-dot listening"></div>
+                <span>Listening</span>
+            </div>
+            <div class="status-item">
+                <div class="status-dot ready"></div>
+                <span>Ready</span>
             </div>
         </div>
     </div>
