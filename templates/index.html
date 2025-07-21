@@ -83,6 +83,27 @@
                 </div>
                 <div class="command-indicator"></div>
             </div>
+
+            <!-- Debug Controls -->
+            <div style="margin: 20px 0; text-align: center;">
+                <button onclick="testVoice()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px; cursor: pointer;">Test Voice</button>
+                <button onclick="goToChat()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px; cursor: pointer;">Go to Chat</button>
+            </div>
+            
+            <script>
+                function testVoice() {
+                    if ('speechSynthesis' in window) {
+                        const utterance = new SpeechSynthesisUtterance('Voice test successful. You can proceed.');
+                        speechSynthesis.speak(utterance);
+                    } else {
+                        alert('Speech synthesis not supported');
+                    }
+                }
+                
+                function goToChat() {
+                    window.location.href = '/chat';
+                }
+            </script>
         </div>
 
         <!-- Professional Feature Cards -->
@@ -135,6 +156,6 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='voice-navigation.js') }}"></script>
+    <script src="{{ url_for('static', filename='voice-navigation-new.js') }}"></script>
 </body>
 </html>
