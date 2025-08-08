@@ -27,6 +27,15 @@ def index():
 def chat():
     return render_template('chat.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+
 @app.route('/api/chat', methods=['POST'])
 def api_chat():
     try:

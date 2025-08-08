@@ -52,10 +52,19 @@ class VoiceNavigator {
     }
 
     initSpeechRecognition() {
+        // Check for HTTPS requirement
+        if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+            console.warn('Speech recognition requires HTTPS or localhost');
+            this.showFallbackMessage();
+            return;
+        }
+
         if ('webkitSpeechRecognition' in window) {
             this.recognition = new webkitSpeechRecognition();
+            console.log('Using webkitSpeechRecognition');
         } else if ('SpeechRecognition' in window) {
             this.recognition = new SpeechRecognition();
+            console.log('Using SpeechRecognition');
         } else {
             console.error('Speech recognition not supported');
             this.showFallbackMessage();
@@ -68,9 +77,10 @@ class VoiceNavigator {
 
         this.recognition.onresult = (event) => {
             const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+            console.log('Heard:', transcript); // Debug log
 
             if (event.results[event.results.length - 1].isFinal) {
-                console.log('Voice command:', transcript);
+                console.log('Final voice command:', transcript);
                 this.processCommand(transcript);
             }
         };
@@ -149,21 +159,38 @@ class VoiceNavigator {
         // Stop listening during command processing to prevent interference
         this.stopListening();
 
-        if (command.includes('openai') || command.includes('open ai') || command.includes('chat') || 
-            command.includes('open a') || command.includes('ai')) {
+        // More flexible matching for "OpenAI"
+        if (command.includes('openai') || command.includes('open ai') || command.includes('open a i') || 
+            command.includes('chat') || command.includes('open a') || command.includes('ai') ||
+            command.includes('open eye') || command.includes('opener') || command.includes('opening')) {
+            console.log('Navigation command detected!');
             this.navigateToChat();
             return; // Prevent restart of listening
         } else if (command.includes('return back to home') || command.includes('go back to home') || command.includes('home')) {
             this.navigateToHome();
             return; // Prevent restart of listening
+        } else if (command.includes('about this website') || command.includes('about') || command.includes('what is this website') || command.includes('about page')) {
+            this.navigateToAbout();
+            return; // Prevent restart of listening
         } else if (command.includes('help') || command.includes('commands')) {
-            this.speakText('Available commands: Say OpenAI to start chatting. Say return back to home page to go home. Say help for this message.');
+            this.speakText('Available commands: Say OpenAI to start chatting. Say about this website to learn more. Say return back to home page to go home. Say help for this message.');
+        } else {
+            console.log('Unrecognized command:', command);
+            // Provide feedback for unrecognized commands
+            this.speakText('Command not recognized. Say OpenAI to start chatting, about this website to learn more, or help for commands.');
         }
+    }
 
-        // Resume listening after a delay for non-navigation commands
+    navigateToAbout() {
+        console.log('Navigating to about...');
+        this.stopListening(); // Stop listening immediately
+        this.recognition = null; // Prevent restart attempts
+        this.updateVoiceIndicator('processing');
+        document.body.style.transition = 'opacity 0.3s ease-out';
+        document.body.style.opacity = '0';
         setTimeout(() => {
-            this.startListening();
-        }, 2000);
+            window.location.href = '/about';
+        }, 300);
     }
 
     navigateToChat() {

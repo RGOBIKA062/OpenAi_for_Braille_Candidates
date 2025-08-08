@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Braille AI Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/chat.css">
+    <style>
+        body {
+            background: radial-gradient(circle at 20% 40%, #26d0ce 0%, #1a2980 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+        .about-container {
+            max-width: 800px;
+            margin: 60px auto;
+            background: rgba(10, 30, 60, 0.85);
+            border-radius: 32px;
+            box-shadow: 0 12px 48px rgba(38,208,206,0.15), 0 2px 8px rgba(26,41,128,0.12);
+            padding: 48px 36px 36px 36px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .about-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 28px;
+            letter-spacing: 2.5px;
+            color: #26d0ce;
+            text-shadow: 0 2px 16px #1a2980, 0 1px 0 #fff2;
+        }
+        .about-desc {
+            font-size: 1.35rem;
+            line-height: 2.2rem;
+            margin-bottom: 36px;
+            color: #e0f7fa;
+            text-shadow: 0 1px 8px #26d0ce44;
+        }
+        .about-features {
+            text-align: left;
+            margin: 0 auto 32px auto;
+            max-width: 650px;
+            padding: 0 12px;
+        }
+        .about-features li {
+            font-size: 1.15rem;
+            margin-bottom: 16px;
+            padding-left: 18px;
+            position: relative;
+        }
+        .about-features li:before {
+            content: '★';
+            position: absolute;
+            left: 0;
+            color: #26d0ce;
+            font-size: 1.1rem;
+            top: 0;
+        }
+        .about-footer {
+            font-size: 1.08rem;
+            color: #b2ebf2;
+            margin-top: 40px;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 8px #26d0ce44;
+        }
+        .about-nav-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-bottom: 32px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.2);
+            transition: background 0.3s, transform 0.2s;
+        }
+        .about-nav-btn:hover {
+            background: linear-gradient(135deg, #26d0ce, #1a2980);
+            transform: scale(1.05);
+        }
+        /* Decorative animated background */
+        .about-bg-animated {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .about-bg-animated .orb {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.18;
+            filter: blur(12px);
+            animation: floatOrb 12s infinite ease-in-out alternate;
+        }
+        .about-bg-animated .orb1 { width: 320px; height: 320px; background: #26d0ce; left: 8vw; top: 12vh; animation-delay: 0s; }
+        .about-bg-animated .orb2 { width: 180px; height: 180px; background: #1a2980; right: 10vw; top: 18vh; animation-delay: 2s; }
+        .about-bg-animated .orb3 { width: 220px; height: 220px; background: #764ba2; left: 18vw; bottom: 10vh; animation-delay: 4s; }
+        .about-bg-animated .orb4 { width: 140px; height: 140px; background: #667eea; right: 16vw; bottom: 8vh; animation-delay: 6s; }
+        @keyframes floatOrb {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-40px) scale(1.08); }
+        }
+        @media (max-width: 600px) {
+            .about-container {
+                padding: 20px 8px;
+            }
+            .about-title {
+                font-size: 2.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="about-bg-animated">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+        <div class="orb orb4"></div>
+    </div>
+    <div class="about-container" id="about-content">
+        <div class="about-title">About Braille AI Assistant</div>
+        <div class="about-desc">
+            Braille AI Assistant is designed to empower visually impaired users with seamless access to information, voice navigation, and interactive chat powered by advanced AI models. Our mission is to make technology accessible, intuitive, and inclusive for everyone.
+        </div>
+        <ul class="about-features">
+            <li>Voice-driven navigation and commands</li>
+            <li>Accessible chat interface with Braille-friendly design</li>
+            <li>Instant answers and detailed explanations powered by Llama-3 AI</li>
+            <li>Text-to-speech for all responses</li>
+            <li>Extraordinary, modern UI for an engaging experience</li>
+        </ul>
+        <div class="about-footer">
+            &copy; 2025 Braille AI Assistant. Crafted for accessibility and excellence.
+        </div>
+    </div>
+    <script src="/static/voice-navigation.js"></script>
+    <script>
+    // Auto-read about page content on load
+    window.onload = function() {
+        const aboutText = document.getElementById('about-content').innerText;
+        fetch('/api/text-to-speech', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: aboutText })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.audio) {
+                const audio = new Audio('data:audio/mp3;base64,' + data.audio);
+                audio.play();
+            }
+        });
+    };
+    </script>
+</body>
+</html>

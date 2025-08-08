@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Braille AI Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/chat.css">
+    <style>
+        body {
+            background: radial-gradient(circle at 60% 20%, #764ba2 0%, #667eea 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        .login-bg-animated {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .login-bg-animated .orb {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.15;
+            filter: blur(16px);
+            animation: floatOrb 14s infinite ease-in-out alternate;
+        }
+        .login-bg-animated .orb1 { width: 260px; height: 260px; background: #764ba2; left: 10vw; top: 10vh; animation-delay: 0s; }
+        .login-bg-animated .orb2 { width: 180px; height: 180px; background: #667eea; right: 12vw; top: 22vh; animation-delay: 2s; }
+        .login-bg-animated .orb3 { width: 220px; height: 220px; background: #26d0ce; left: 20vw; bottom: 12vh; animation-delay: 4s; }
+        .login-bg-animated .orb4 { width: 140px; height: 140px; background: #1a2980; right: 18vw; bottom: 8vh; animation-delay: 6s; }
+        @keyframes floatOrb {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-40px) scale(1.08); }
+        }
+        .login-container {
+            max-width: 600px;
+            margin: 80px auto 0 auto;
+            background: rgba(10, 30, 60, 0.85);
+            border-radius: 40px;
+            box-shadow: 0 16px 64px rgba(102,126,234,0.18), 0 2px 12px rgba(26,41,128,0.15);
+            padding: 64px 48px 48px 48px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+        .login-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 28px;
+            letter-spacing: 2px;
+            color: #26d0ce;
+            text-shadow: 0 2px 16px #764ba2, 0 1px 0 #fff2;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+        .login-input {
+            padding: 14px 18px;
+            border-radius: 18px;
+            border: none;
+            font-size: 1.1rem;
+            background: #e0f7fa;
+            color: #1a2980;
+            box-shadow: 0 2px 8px rgba(38,208,206,0.08);
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+        .login-input:focus {
+            box-shadow: 0 2px 16px #26d0ce44;
+        }
+        .login-btn {
+            background: linear-gradient(135deg, #26d0ce, #764ba2);
+            color: white;
+            border: none;
+            padding: 14px 0;
+            border-radius: 22px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(38,208,206,0.15);
+            transition: background 0.3s, transform 0.2s;
+        }
+        .login-btn:hover {
+            background: linear-gradient(135deg, #764ba2, #26d0ce);
+            transform: scale(1.04);
+        }
+        .login-footer {
+            font-size: 1rem;
+            color: #b2ebf2;
+            margin-top: 32px;
+            letter-spacing: 1px;
+        }
+        @media (max-width: 600px) {
+            .login-container {
+                padding: 20px 8px;
+                margin-top: 40px;
+            }
+            .login-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-bg-animated">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+        <div class="orb orb4"></div>
+    </div>
+    <div class="login-container">
+        <div class="login-title">Login to Braille AI Assistant</div>
+        <form class="login-form">
+            <input type="text" class="login-input" placeholder="Username" aria-label="Username" required>
+            <input type="password" class="login-input" placeholder="Password" aria-label="Password" required>
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+        <div class="login-footer">
+            &copy; 2025 Braille AI Assistant. Secure &amp; Accessible.
+        </div>
+    </div>
+</body>
+</html>
