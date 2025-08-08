@@ -83,6 +83,22 @@
                 </div>
                 <div class="command-indicator"></div>
             </div>
+
+            <!-- Manual Navigation Fallback -->
+            <div class="manual-nav" style="margin-top: 20px; text-align: center;">
+                <button onclick="window.location.href='/chat'" 
+                        style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 16px; cursor: pointer; transition: all 0.3s ease;">
+                    Start Chat (Manual)
+                </button>
+                <button onclick="window.location.href='/about'" 
+                        style="background: linear-gradient(135deg, #26d0ce, #1a2980); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 16px; cursor: pointer; margin-left: 16px; box-shadow: 0 4px 16px rgba(38,208,206,0.3); transition: all 0.3s ease; font-weight: bold; letter-spacing: 1px;">
+                    About This Website
+                </button>
+                <button onclick="window.location.href='/login'" 
+                        style="background: linear-gradient(135deg, #764ba2, #26d0ce); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 16px; cursor: pointer; margin-left: 16px; box-shadow: 0 4px 16px rgba(118,75,162,0.3); transition: all 0.3s ease; font-weight: bold; letter-spacing: 1px;">
+                    Login
+                </button>
+            </div>
         </div>
 
         <!-- Professional Feature Cards -->
@@ -135,6 +151,6 @@
         </div>
     </div>
 
-    <script src="{{ url_for('static', filename='voice-navigation-new.js') }}"></script>
+    <script src="{{ url_for('static', filename='voice-navigation.js') }}"></script>
 </body>
 </html>

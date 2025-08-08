@@ -184,10 +184,7 @@ class VoiceChat {
         if ('speechSynthesis' in window) {
             speechSynthesis.cancel(); // Cancel any ongoing speech
             
-            // Clean the text by removing unwanted symbols
-            const cleanText = this.cleanTextForSpeech(text);
-            
-            const utterance = new SpeechSynthesisUtterance(cleanText);
+            const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 0.9;
             utterance.pitch = 1.2;
             utterance.volume = 0.8;
@@ -213,19 +210,6 @@ class VoiceChat {
             
             speechSynthesis.speak(utterance);
         }
-    }
-
-    cleanTextForSpeech(text) {
-        // Remove or replace unwanted symbols and characters
-        return text
-            .replace(/\*/g, '')                    // Remove asterisks
-            .replace(/[#@$%^&()[\]{}|\\]/g, '')    // Remove special symbols
-            .replace(/_{2,}/g, '')                 // Remove multiple underscores
-            .replace(/_{1}/g, ' ')                 // Replace single underscore with space
-            .replace(/\s+/g, ' ')                  // Replace multiple spaces with single space
-            .replace(/\.{2,}/g, '.')               // Replace multiple dots with single dot
-            .replace(/,{2,}/g, ',')                // Replace multiple commas with single comma
-            .trim();                               // Remove leading/trailing whitespace
     }
 
     stopConversation() {

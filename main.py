@@ -16,7 +16,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Groq API configuration from environment variables
-GROQ_API_KEY = os.getenv('GROQ_API_KEY','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')
+GROQ_API_KEY = os.getenv('GROQ_API_KEY')
 GROQ_API_URL = os.getenv('GROQ_API_URL', 'https://api.groq.com/openai/v1/chat/completions')
 
 @app.route('/')

@@ -1,0 +1,230 @@
+[33mcommit 4ff7e8cfb05e08c244276c729445f4a1a86e697b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: ab21ad2 8774b02
+Author: RGOBIKA062 <gobikarr@gmail.com>
+Date:   Fri Aug 8 13:43:47 2025 +0530
+
+    Have included about page and sign in page
+
+[33mcommit ab21ad2465a4c9f34a580101499f612edd6d6a6a[m
+Author: RGOBIKA062 <gobikarr@gmail.com>
+Date:   Fri Aug 8 13:40:23 2025 +0530
+
+    Have included about page and sign in page
+
+[33mcommit 8774b02287bc465be02ffe17e909a1598e7c4112[m
+Merge: 6d31fec 02e5599
+Author: RGOBIKA062 <gobikarr@gmail.com>
+Date:   Mon Jul 21 21:34:22 2025 +0530
+
+    Have included some features
+
+[33mcommit 6d31fec28692fe753310f415c5a0fe489d0a1c5e[m
+Author: RGOBIKA062 <gobikarr@gmail.com>
+Date:   Sun Jul 20 23:52:37 2025 +0530
+
+    Save local changes
+
+[33mcommit 02e559929166bf8b97112861494b695d46abd869[m
+Author: GOBIKA R <gobikarr@gmail.com>
+Date:   Sun Jul 20 18:15:38 2025 +0000
+
+    Assistant checkpoint: Fix speech recognition error handling and loops
+    
+    Assistant generated file changes:
+    - static/voice-navigation.js: Fix speech recognition error handling and restart logic, Improve recognition restart logic, Add shouldStop flag and improve constructor, Improve stopListening method, Improve startListening method, Add error state to voice indicator
+    
+    ---
+    
+    User prompt:
+    
+    why the voice is not working
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit 1f4c8171ec6d589f70bda97eed3c83b196c7cd74[m
+Author: GOBIKA R <gobikarr@gmail.com>
+Date:   Sun Jul 20 18:13:51 2025 +0000
+
+    Assistant checkpoint: Simplified navigation to fix command detection
+    
+    Assistant generated file changes:
+    - static/voice-navigation.js: Simplify navigation to remove speech synthesis interference, Simplify home navigation to remove speech synthesis interference, Add more aggressive command detection
+    
+    ---
+    
+    User prompt:
+    
+    not yet fixed
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit ed27d0f6d48d34fb0b802fcaee213ce2c86351cd[m
+Author: GOBIKA R <gobikarr@gmail.com>
+Date:   Sun Jul 20 18:12:31 2025 +0000
+
+    Assistant checkpoint: Fix voice navigation and error handling
+    
+    Assistant generated file changes:
+    - static/voice-navigation.js: Fix navigation logic and improve error handling, Add stopListening method and improve error handling, Improve error handling to reduce interference, Improve navigation methods
+    
+    ---
+    
+    User prompt:
+    
+    why if say open ai the page is not navigating
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit c661d9e6d70ceb1286c12ab839f289091955ae10[m
+Author: GOBIKA R <gobikarr@gmail.com>
+Date:   Sun Jul 20 17:40:30 2025 +0000
+
+    Assistant checkpoint: Added .env file and gitignore for secure Git deployment
+    
+    Assistant generated file changes:
+    - .env: Create environment variables file
+    - .gitignore: Add gitignore to exclude sensitive files
+    - main.py: Update to use environment variables, Update Flask run configuration to use environment variables
+    
+    ---
+    
+    User prompt:
+    
+    add .env file  because i need to push this project in git
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit 0e8983d1ec6a9662e9a4e6435c2a352cda11e20f[m
+Author: GOBIKA R <45291525-gobikar23cse@users.noreply.replit.com>
+Date:   Sun Jul 20 17:12:40 2025 +0000
+
+    Assistant checkpoint: Simplified background to professional gradient design
+    
+    Assistant generated file changes:
+    - static/styles.css: Replace complex background with simple professional gradient design
+    - templates/index.html: Remove complex background elements, keep clean professional structure
+    - static/voice-navigation.js: Simplify JavaScript by removing complex background animations
+    
+    ---
+    
+    User prompt:
+    
+    make different background and i dont need that rainy drops simple and extraordinarry professional look
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit ff3404f6ed145dcaefc49b37a049ee803fc73638[m
+Author: GOBIKA R <45291525-gobikar23cse@users.noreply.replit.com>
+Date:   Sun Jul 20 17:00:43 2025 +0000
+
+    Assistant checkpoint: Created professional extraordinary UI with advanced animations and effects
+    
+    Assistant generated file changes:
+    - templates/index.html: Create professional extraordinary UI with advanced animations
+    - static/styles.css: Create professional extraordinary CSS with advanced animations
+    - static/voice-navigation.js: Add professional animations and effects
+    
+    ---
+    
+    User prompt:
+    
+    No i need something professional and excellent
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit ac2e029b017117a2239c6e49209973defc17e151[m
+Author: GOBIKA R <45291525-gobikar23cse@users.noreply.replit.com>
+Date:   Sun Jul 20 16:55:41 2025 +0000
+
+    Assistant checkpoint: Created extraordinary UI with advanced animations
+    
+    Assistant generated file changes:
+    - static/styles.css: Create extraordinary UI with advanced animations
+    - templates/index.html: Update HTML structure for extraordinary UI
+    - static/voice-navigation.js: Add digital rain effect and enhanced animations
+    
+    ---
+    
+    User prompt:
+    
+    fine but in home i need an extraordinary ui
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit 9e116493c4e9e2e99d9a7ea448ba0cd73f569434[m
+Author: GOBIKA R <45291525-gobikar23cse@users.noreply.replit.com>
+Date:   Sun Jul 20 16:51:31 2025 +0000
+
+    Assistant checkpoint: Fixed home navigation and added neural network animation
+    
+    Assistant generated file changes:
+    - static/chat.js: Fix home navigation command detection
+    - static/voice-navigation.js: Fix home navigation command detection
+    - static/styles.css: Replace bubble animation with AI-themed neural network animation, Update media query to hide neural network on mobile
+    - templates/index.html: Replace floating orbs with neural network and particle animations
+    
+    ---
+    
+    User prompt:
+    
+    no its not returning back to the home page and in addtion to this in the home page i didnt like bubbles make any diffferent and very marvellous animation related to my project
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit ac1fd65b962c80d840513a5b88679f3bf852b322[m
+Author: GOBIKA R <45291525-gobikar23cse@users.noreply.replit.com>
+Date:   Sun Jul 20 16:47:54 2025 +0000
+
+    Assistant checkpoint: Added home navigation command and female voice
+    
+    Assistant generated file changes:
+    - static/voice-navigation.js: Add home navigation command, Add navigateToHome method, Update speakText to use female voice
+    - static/chat.js: Update chat processUserInput for home navigation, Update chat speakText to use female voice
+    
+    ---
+    
+    User prompt:
+    
+    if i say return back to home page then it should go to home page and the i need a women voice
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit 3975489414dec5c5645a24d4bf78d6ea3ecdd3ab[m
+Author: GOBIKA R <45291525-gobikar23cse@users.noreply.replit.com>
+Date:   Sun Jul 20 16:44:57 2025 +0000
+
+    Assistant checkpoint: Created voice-controlled AI website for Braille users
+    
+    Assistant generated file changes:
+    - main.py: Create Flask backend with Groq API integration and voice features
+    - templates/index.html: Create accessible home page with voice navigation
+    - templates/chat.html: Create voice-controlled chat interface
+    - static/styles.css: Create main stylesheet with extraordinary animations
+    - static/chat.css: Create chat interface styles with animations
+    - static/voice-navigation.js: Create voice navigation for home page
+    - static/chat.js: Create advanced voice-controlled chat interface
+    - .replit: Updated app configuration
+    
+    ---
+    
+    User prompt:
+    
+    i am going to create an website named OpenAi for Braille candidates which is for the visually impared people here i am going to use groq api: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 and llama 38b8192 model this is website like in the home page if i say open ai then it shooulld navigate to the chat page and i that if the user ask questions it should answer in minimal sentence and if they ask to elaborate related terms then it should elaborate and the important thing to be noted is as this is for braille candidates so there is no need for buttons and the ouput should be in voice form and in the chat page it should do tasks like if i say stop it should stop and and what are the commands that i am sayign that it should it do and the ui should be very very excellent and make the animations to the core in order make an website extraordinary where no one can done and use react.js as fronted and flask python as backend and for database mongob
+    
+    Replit-Commit-Author: Assistant
+    Replit-Commit-Session-Id: ca51f111-562e-47dc-891c-4983fe39af5d
+
+[33mcommit 27cfc094cea68e59486815503a40616444c62789[m
+Author: GOBIKA R <45291525-gobikar23cse@users.noreply.replit.com>
+Date:   Sun Jul 20 16:41:42 2025 +0000
+
+    Initial commit
