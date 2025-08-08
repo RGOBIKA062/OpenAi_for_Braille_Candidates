@@ -1,23 +1,21 @@
-// ...existing code...
 class VoiceNavigator {
     constructor() {
         this.recognition = null;
         this.isListening = false;
+        this.isProcessing = false;
         this.shouldStop = false;
-        this.initSpeechRecognition();
+        
         this.initAnimations();
+        this.initSpeechRecognition();
         
         // Start listening after a short delay to ensure everything is initialized
         setTimeout(() => {
             this.startListening();
-        }, 500);
+        }, 1000);
     }
 
     initAnimations() {
-        // Initialize Typewriter Effect
         this.initTypewriter();
-
-        // Initialize Morphing Text
         this.initMorphingText();
     }
 
@@ -26,8 +24,9 @@ class VoiceNavigator {
         if (!typewriterElement) return;
 
         const text = typewriterElement.getAttribute('data-text');
+        if (!text) return;
+        
         let i = 0;
-
         function typeWriter() {
             if (i < text.length) {
                 typewriterElement.innerHTML = text.substring(0, i + 1) + '<span class="cursor">|</span>';
@@ -35,7 +34,6 @@ class VoiceNavigator {
                 setTimeout(typeWriter, 100);
             }
         }
-
         setTimeout(typeWriter, 1000);
     }
 
@@ -43,7 +41,10 @@ class VoiceNavigator {
         const morphingElement = document.querySelector('.morphing-text');
         if (!morphingElement) return;
 
-        const words = morphingElement.getAttribute('data-words').split(',');
+        const wordsAttr = morphingElement.getAttribute('data-words');
+        if (!wordsAttr) return;
+        
+        const words = wordsAttr.split(',');
         let currentWordIndex = 0;
 
         setInterval(() => {
@@ -53,19 +54,10 @@ class VoiceNavigator {
     }
 
     initSpeechRecognition() {
-        // Check for HTTPS requirement
-        if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-            console.warn('Speech recognition requires HTTPS or localhost');
-            this.showFallbackMessage();
-            return;
-        }
-
         if ('webkitSpeechRecognition' in window) {
             this.recognition = new webkitSpeechRecognition();
-            console.log('Using webkitSpeechRecognition');
         } else if ('SpeechRecognition' in window) {
             this.recognition = new SpeechRecognition();
-            console.log('Using SpeechRecognition');
         } else {
             console.error('Speech recognition not supported');
             this.showFallbackMessage();
@@ -78,10 +70,9 @@ class VoiceNavigator {
 
         this.recognition.onresult = (event) => {
             const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-            console.log('Heard:', transcript); // Debug log
 
             if (event.results[event.results.length - 1].isFinal) {
-                console.log('Final voice command:', transcript);
+                console.log('Voice command detected:', transcript);
                 this.processCommand(transcript);
             }
         };
@@ -98,7 +89,7 @@ class VoiceNavigator {
             // For no-speech errors, restart with longer delay to avoid loops
             if (event.error === 'no-speech') {
                 setTimeout(() => {
-                    if (this.recognition) { // Only restart if not destroyed
+                    if (this.recognition && !this.shouldStop) {
                         this.startListening();
                     }
                 }, 3000);
@@ -108,8 +99,9 @@ class VoiceNavigator {
             // For other errors, restart with delay
             if (event.error === 'audio-capture' || event.error === 'not-allowed') {
                 this.updateVoiceIndicator('error');
+                this.showFallbackMessage();
                 setTimeout(() => {
-                    if (this.recognition) {
+                    if (this.recognition && !this.shouldStop) {
                         this.startListening();
                     }
                 }, 5000);
@@ -119,22 +111,26 @@ class VoiceNavigator {
         this.recognition.onend = () => {
             this.isListening = false;
             // Only restart if recognition object exists and we haven't stopped intentionally
-            if (this.recognition && !this.shouldStop) {
+            if (this.recognition && !this.shouldStop && !this.isProcessing) {
                 setTimeout(() => {
                     this.startListening();
                 }, 1500);
             }
         };
+
+        this.recognition.onstart = () => {
+            this.isListening = true;
+            this.updateVoiceIndicator('listening');
+        };
     }
 
     startListening() {
-        if (!this.recognition || this.isListening || this.shouldStop) return;
+        if (!this.recognition || this.isListening || this.shouldStop || this.isProcessing) return;
 
         try {
             this.shouldStop = false;
             this.recognition.start();
-            this.isListening = true;
-            this.updateVoiceIndicator('listening');
+            console.log('Started listening for voice commands...');
         } catch (error) {
             console.log('Failed to start recognition:', error);
             if (!this.shouldStop) {
@@ -147,51 +143,51 @@ class VoiceNavigator {
 
     stopListening() {
         this.shouldStop = true;
+        this.isProcessing = true;
         if (this.recognition && this.isListening) {
-            this.recognition.stop();
-            this.isListening = false;
+            try {
+                this.recognition.stop();
+                this.isListening = false;
+            } catch (error) {
+                console.log('Error stopping recognition:', error);
+            }
         }
     }
 
     processCommand(command) {
-        this.updateVoiceIndicator('processing');
         console.log('Processing command:', command);
-
+        
         // Stop listening during command processing to prevent interference
         this.stopListening();
+        this.updateVoiceIndicator('processing');
 
-        // More flexible matching for "OpenAI"
-        if (command.includes('openai') || command.includes('open ai') || command.includes('open a i') || 
-            command.includes('chat') || command.includes('open a') || command.includes('ai') ||
-            command.includes('open eye') || command.includes('opener') || command.includes('opening')) {
-            console.log('Navigation command detected!');
+        const cmd = command.toLowerCase().trim();
+
+        if (cmd.includes('openai') || cmd.includes('open ai') || cmd.includes('chat') || 
+            cmd.includes('open a i') || cmd.includes('ai') || cmd.includes('open eye')) {
             this.navigateToChat();
             return; // Prevent restart of listening
-        } else if (command.includes('return back to home') || command.includes('go back to home') || command.includes('home')) {
+        } else if (cmd.includes('return back to home') || cmd.includes('go back to home') || cmd.includes('home')) {
             this.navigateToHome();
             return; // Prevent restart of listening
-        } else if (command.includes('about this website') || command.includes('about') || command.includes('what is this website') || command.includes('about page')) {
-            this.navigateToAbout();
-            return; // Prevent restart of listening
-        } else if (command.includes('help') || command.includes('commands')) {
-            this.speakText('Available commands: Say OpenAI to start chatting. Say about this website to learn more. Say return back to home page to go home. Say help for this message.');
-        } else {
-            console.log('Unrecognized command:', command);
-            // Provide feedback for unrecognized commands
-            this.speakText('Command not recognized. Say OpenAI to start chatting, about this website to learn more, or help for commands.');
+        } else if (cmd.includes('help') || cmd.includes('commands')) {
+            this.speakText('Available commands: Say OpenAI to start chatting. Say return back to home page to go home. Say help for this message.');
+            // Resume listening after help
+            setTimeout(() => {
+                this.isProcessing = false;
+                this.shouldStop = false;
+                this.startListening();
+            }, 5000);
+            return;
         }
-    }
 
-    navigateToAbout() {
-        console.log('Navigating to about...');
-        this.stopListening(); // Stop listening immediately
-        this.recognition = null; // Prevent restart attempts
-        this.updateVoiceIndicator('processing');
-        document.body.style.transition = 'opacity 0.3s ease-out';
-        document.body.style.opacity = '0';
+        // If command not recognized, provide feedback and resume listening
+        this.speakText(`I heard "${command}" but didn't understand. Try saying "OpenAI", "chat", "home", or "help".`);
         setTimeout(() => {
-            window.location.href = '/about';
-        }, 300);
+            this.isProcessing = false;
+            this.shouldStop = false;
+            this.startListening();
+        }, 4000);
     }
 
     navigateToChat() {
@@ -199,16 +195,16 @@ class VoiceNavigator {
         this.stopListening(); // Stop listening immediately
         this.recognition = null; // Prevent restart attempts
         
+        this.speakText('Opening chat interface');
         this.updateVoiceIndicator('processing');
 
         // Add navigation animation
-        document.body.style.transition = 'opacity 0.3s ease-out';
+        document.body.style.transition = 'opacity 0.5s ease-out';
         document.body.style.opacity = '0';
 
-        // Navigate immediately without waiting for speech
         setTimeout(() => {
             window.location.href = '/chat';
-        }, 300);
+        }, 500);
     }
 
     navigateToHome() {
@@ -216,16 +212,16 @@ class VoiceNavigator {
         this.stopListening(); // Stop listening immediately
         this.recognition = null; // Prevent restart attempts
         
+        this.speakText('Returning to home page');
         this.updateVoiceIndicator('processing');
 
         // Add navigation animation
-        document.body.style.transition = 'opacity 0.3s ease-out';
+        document.body.style.transition = 'opacity 0.5s ease-out';
         document.body.style.opacity = '0';
 
-        // Navigate immediately without waiting for speech
         setTimeout(() => {
             window.location.href = '/';
-        }, 300);
+        }, 500);
     }
 
     updateVoiceIndicator(state) {
@@ -253,28 +249,24 @@ class VoiceNavigator {
 
     speakText(text) {
         if ('speechSynthesis' in window) {
+            // Stop any ongoing speech
+            speechSynthesis.cancel();
+            
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.rate = 0.9;
-            utterance.pitch = 1.2;
+            utterance.pitch = 1.1;
             utterance.volume = 0.8;
 
-            // Choose a female voice if available
+            // Try to get a good voice
             const voices = speechSynthesis.getVoices();
-            const femaleVoice = voices.find(voice => 
-                voice.name.toLowerCase().includes('female') ||
-                voice.name.toLowerCase().includes('zira') ||
-                voice.name.toLowerCase().includes('hazel') ||
-                voice.name.toLowerCase().includes('samantha') ||
-                voice.name.toLowerCase().includes('karen') ||
-                voice.name.toLowerCase().includes('moira') ||
-                voice.name.toLowerCase().includes('tessa') ||
-                voice.name.toLowerCase().includes('veena') ||
-                voice.name.toLowerCase().includes('susan') ||
-                voice.name.toLowerCase().includes('fiona')
-            );
-
-            if (femaleVoice) {
-                utterance.voice = femaleVoice;
+            if (voices.length > 0) {
+                const englishVoice = voices.find(voice => 
+                    voice.lang.startsWith('en') && !voice.name.includes('Google')
+                ) || voices[0];
+                
+                if (englishVoice) {
+                    utterance.voice = englishVoice;
+                }
             }
 
             speechSynthesis.speak(utterance);
@@ -284,12 +276,105 @@ class VoiceNavigator {
     showFallbackMessage() {
         const commandDisplay = document.querySelector('.command-content');
         if (commandDisplay) {
-            commandDisplay.textContent = 'Speech recognition not supported. Please use a modern browser.';
+            commandDisplay.textContent = 'Voice not available - Please allow microphone access and refresh the page';
         }
+        
+        // Create manual buttons as fallback
+        this.createFallbackButtons();
+    }
+
+    createFallbackButtons() {
+        // Remove existing buttons if any
+        const existingContainer = document.getElementById('fallback-buttons');
+        if (existingContainer) {
+            existingContainer.remove();
+        }
+
+        const buttonContainer = document.createElement('div');
+        buttonContainer.id = 'fallback-buttons';
+        buttonContainer.style.cssText = `
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10000;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 15px;
+        `;
+
+        const chatButton = this.createButton('🗨️ Go to Chat', () => {
+            this.navigateToChat();
+        });
+        
+        const homeButton = this.createButton('🏠 Go Home', () => {
+            this.navigateToHome();
+        });
+
+        const retryButton = this.createButton('🎤 Retry Voice', () => {
+            buttonContainer.remove();
+            this.initSpeechRecognition();
+        });
+        
+        buttonContainer.appendChild(chatButton);
+        buttonContainer.appendChild(homeButton);
+        buttonContainer.appendChild(retryButton);
+        document.body.appendChild(buttonContainer);
+    }
+
+    createButton(text, onClick) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.style.cssText = `
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        `;
+        
+        button.onmouseover = () => {
+            button.style.transform = 'translateY(-2px)';
+            button.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
+        };
+        
+        button.onmouseout = () => {
+            button.style.transform = 'translateY(0)';
+            button.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+        };
+        
+        button.onclick = onClick;
+        return button;
     }
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new VoiceNavigator();
+    // Wait for voices to load
+    if ('speechSynthesis' in window) {
+        speechSynthesis.onvoiceschanged = () => {
+            if (!window.voiceNavigator) {
+                window.voiceNavigator = new VoiceNavigator();
+            }
+        };
+        
+        // Fallback if voices are already loaded
+        setTimeout(() => {
+            if (!window.voiceNavigator) {
+                window.voiceNavigator = new VoiceNavigator();
+            }
+        }, 1500);
+    } else {
+        // No speech synthesis support
+        setTimeout(() => {
+            window.voiceNavigator = new VoiceNavigator();
+        }, 1000);
+    }
 });
