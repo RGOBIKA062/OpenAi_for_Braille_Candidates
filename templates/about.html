@@ -3,162 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Braille AI Assistant</title>
-    <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="/static/chat.css">
+    <title>About - OpenAI for Braille Candidates</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+  <script src="{{ url_for('static', filename='voice-navigation.js') }}?v=20250812"></script>
     <style>
-        body {
-            background: radial-gradient(circle at 20% 40%, #26d0ce 0%, #1a2980 100%);
-            color: #fff;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            min-height: 100vh;
-            margin: 0;
-            overflow-x: hidden;
-        }
-        .about-container {
-            max-width: 800px;
-            margin: 60px auto;
-            background: rgba(10, 30, 60, 0.85);
-            border-radius: 32px;
-            box-shadow: 0 12px 48px rgba(38,208,206,0.15), 0 2px 8px rgba(26,41,128,0.12);
-            padding: 48px 36px 36px 36px;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-        }
-        .about-title {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 28px;
-            letter-spacing: 2.5px;
-            color: #26d0ce;
-            text-shadow: 0 2px 16px #1a2980, 0 1px 0 #fff2;
-        }
-        .about-desc {
-            font-size: 1.35rem;
-            line-height: 2.2rem;
-            margin-bottom: 36px;
-            color: #e0f7fa;
-            text-shadow: 0 1px 8px #26d0ce44;
-        }
-        .about-features {
-            text-align: left;
-            margin: 0 auto 32px auto;
-            max-width: 650px;
-            padding: 0 12px;
-        }
-        .about-features li {
-            font-size: 1.15rem;
-            margin-bottom: 16px;
-            padding-left: 18px;
-            position: relative;
-        }
-        .about-features li:before {
-            content: '★';
-            position: absolute;
-            left: 0;
-            color: #26d0ce;
-            font-size: 1.1rem;
-            top: 0;
-        }
-        .about-footer {
-            font-size: 1.08rem;
-            color: #b2ebf2;
-            margin-top: 40px;
-            letter-spacing: 1px;
-            text-shadow: 0 1px 8px #26d0ce44;
-        }
-        .about-nav-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 25px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            margin-bottom: 32px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            box-shadow: 0 2px 8px rgba(102,126,234,0.2);
-            transition: background 0.3s, transform 0.2s;
-        }
-        .about-nav-btn:hover {
-            background: linear-gradient(135deg, #26d0ce, #1a2980);
-            transform: scale(1.05);
-        }
-        /* Decorative animated background */
-        .about-bg-animated {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 0;
-            pointer-events: none;
-        }
-        .about-bg-animated .orb {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.18;
-            filter: blur(12px);
-            animation: floatOrb 12s infinite ease-in-out alternate;
-        }
-        .about-bg-animated .orb1 { width: 320px; height: 320px; background: #26d0ce; left: 8vw; top: 12vh; animation-delay: 0s; }
-        .about-bg-animated .orb2 { width: 180px; height: 180px; background: #1a2980; right: 10vw; top: 18vh; animation-delay: 2s; }
-        .about-bg-animated .orb3 { width: 220px; height: 220px; background: #764ba2; left: 18vw; bottom: 10vh; animation-delay: 4s; }
-        .about-bg-animated .orb4 { width: 140px; height: 140px; background: #667eea; right: 16vw; bottom: 8vh; animation-delay: 6s; }
-        @keyframes floatOrb {
-            0% { transform: translateY(0) scale(1); }
-            100% { transform: translateY(-40px) scale(1.08); }
-        }
-        @media (max-width: 600px) {
-            .about-container {
-                padding: 20px 8px;
-            }
-            .about-title {
-                font-size: 2.1rem;
-            }
-        }
+      .about-hero {
+        width: 100%;
+        background: linear-gradient(120deg, #232526 0%, #26d0ce 100%);
+        padding: 64px 0 32px 0;
+        text-align: center;
+        color: #fff;
+      }
+      .about-hero-title {
+        font-size: 3em;
+        font-weight: 900;
+        letter-spacing: 2px;
+        margin-bottom: 18px;
+        font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+      }
+      .about-hero-desc {
+        font-size: 1.3em;
+        color: #e0e0e0;
+        margin-bottom: 32px;
+      }
+      .ai-animate {
+        font-size: 3.5em;
+        color: #26d0ce;
+        animation: aiPulse 2s infinite;
+        display: inline-block;
+        margin-bottom: 18px;
+      }
+      @keyframes aiPulse {
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px #26d0ce); }
+        50% { transform: scale(1.2); filter: drop-shadow(0 0 24px #26d0ce); }
+      }
+      .about-features-grid {
+        display: flex;
+        gap: 40px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 48px 0;
+      }
+      .about-feature-card {
+        background: rgba(38, 208, 206, 0.08);
+        border-radius: 18px;
+        box-shadow: 0 2px 16px #26d0ce33;
+        flex: 1 1 260px;
+        min-width: 220px;
+        max-width: 320px;
+        padding: 32px 24px;
+        margin: 0 18px 32px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-left: 4px solid #26d0ce;
+        text-align: center;
+      }
+      .about-feature-card h3 {
+        color: #26d0ce;
+        font-size: 1.3em;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+      .about-feature-card p {
+        color: #f8f8ff;
+        font-size: 1.1em;
+        margin-bottom: 0;
+      }
+      .about-feature-icon {
+        font-size: 2.2em;
+        margin-bottom: 10px;
+        color: #26d0ce;
+        animation: aiPulse 2s infinite;
+      }
+      .about-section {
+        margin: 48px 0;
+        padding: 0 4vw;
+      }
+      .about-section-title {
+        color: #26d0ce;
+        font-size: 1.4em;
+        font-weight: 700;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .about-list, .about-mission {
+        font-size: 1.15em;
+        color: #f8f8ff;
+        margin-bottom: 0;
+      }
+      .about-list li {
+        margin-bottom: 12px; /* Adds space between list items */
+      }
+      .about-grid {
+        padding: 0 4vw;
+        margin: 48px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 48px; /* Space between the rows */
+      }
+      .about-grid-row {
+        display: flex;
+        justify-content: space-between; /* Key for corner alignment */
+        align-items: stretch; /* Changed from flex-start to make columns equal height */
+        gap: 40px; /* Space between columns if they get close */
+      }
+      .about-grid-row .about-section {
+        width: 45%; /* Each section takes up part of the row */
+        margin: 0;
+        padding: 0;
+      }
+      .about-section-title .about-feature-icon {
+        font-size: 1.2em; /* Centralized style for icons */
+      }
     </style>
 </head>
 <body>
-    <div class="about-bg-animated">
-        <div class="orb orb1"></div>
-        <div class="orb orb2"></div>
-        <div class="orb orb3"></div>
-        <div class="orb orb4"></div>
+    <div class="about-hero">
+      <span class="ai-animate">🤖</span>
+      <h1 class="about-hero-title">About OpenAI for Braille Candidates</h1>
+      <p class="about-hero-desc">A professional, accessible AI assistant for visually impaired users. Navigate, chat, and learn—hands-free.</p>
     </div>
-    <div class="about-container" id="about-content">
-        <div class="about-title">About Braille AI Assistant</div>
-        <div class="about-desc">
-            Braille AI Assistant is designed to empower visually impaired users with seamless access to information, voice navigation, and interactive chat powered by advanced AI models. Our mission is to make technology accessible, intuitive, and inclusive for everyone.
-        </div>
-        <ul class="about-features">
-            <li>Voice-driven navigation and commands</li>
-            <li>Accessible chat interface with Braille-friendly design</li>
-            <li>Instant answers and detailed explanations powered by Llama-3 AI</li>
-            <li>Text-to-speech for all responses</li>
-            <li>Extraordinary, modern UI for an engaging experience</li>
-        </ul>
-        <div class="about-footer">
-            &copy; 2025 Braille AI Assistant. Crafted for accessibility and excellence.
-        </div>
+    <div class="about-features-grid">
+      <div class="about-feature-card">
+        <span class="about-feature-icon">🗣️</span>
+        <h3>Voice Navigation</h3>
+        <p>Seamless control and navigation using your voice.</p>
+      </div>
+      <div class="about-feature-card">
+        <span class="about-feature-icon">🤝</span>
+        <h3>Smart AI Chat</h3>
+        <p>Instant, intelligent answers and support tailored to your needs.</p>
+      </div>
+      <div class="about-feature-card">
+        <span class="about-feature-icon">🌈</span>
+        <h3>Accessibility First</h3>
+        <p>High-contrast, audio feedback, and Braille-friendly design.</p>
+      </div>
+      <div class="about-feature-card">
+        <span class="about-feature-icon">🔒</span>
+        <h3>Privacy &amp; Security</h3>
+        <p>100% privacy and secure conversations for all users.</p>
+      </div>
     </div>
-    <script src="/static/voice-navigation.js"></script>
+
+    <!-- New 2x2 Grid Layout -->
+    <div class="about-grid">
+      <!-- Row 1 -->
+      <div class="about-grid-row">
+        <!-- Voice Commands -->
+        <section id="voice-commands" class="about-section">
+          <h2 class="about-section-title">
+            <span class="about-feature-icon">🎙️</span>
+            Voice Commands
+          </h2>
+          <ul class="about-list">
+            <li><strong>"Go to chat":</strong> Navigates to the main chat page.</li>
+            <li><strong>"Go to about":</strong> Navigates to this about page.</li>
+            <li><strong>"Read page":</strong> Reads the main content of the current page.</li>
+            <li><strong>"Stop reading":</strong> Stops the current text-to-speech playback.</li>
+          </ul>
+        </section>
+        <!-- Mission -->
+        <section id="mission" class="about-section">
+          <h2 class="about-section-title">
+            <span class="about-feature-icon">🎯</span>
+            Our Mission
+          </h2>
+          <p class="about-mission">
+            Our mission is to democratize access to AI for visually impaired individuals, providing tools that empower, educate, and enable seamless integration of technology into daily life. We believe in a world where technology is accessible to everyone.
+          </p>
+        </section>
+      </div>
+      <!-- Row 2 -->
+      <div class="about-grid-row">
+        <!-- How It Works -->
+        <section id="how-it-works" class="about-section">
+          <h2 class="about-section-title">
+            <span class="about-feature-icon">⚙️</span>
+            How It Works
+          </h2>
+          <ul class="about-list">
+            <li>The application is built with a Python-based backend for robust performance.</li>
+            <li>Utilizes server-side text-to-speech for reliable and consistent audio output.</li>
+            <li>The interface is designed with high-contrast colors and ARIA labels for screen readers.</li>
+            <li>Voice commands are processed using the browser's built-in speech recognition engine.</li>
+          </ul>
+        </section>
+        <!-- Why Choose Us -->
+        <section id="why-choose-us" class="about-section">
+          <h2 class="about-section-title">
+            <span class="about-feature-icon">🌟</span>
+            Why Choose Us?
+          </h2>
+          <div class="about-mission">
+            We are committed to an accessibility-first design philosophy. Our application is not just a tool but a companion, designed with continuous feedback from the visually impaired community to ensure it meets real-world needs effectively and respectfully.
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='about-reader.js') }}?v=20250813"></script>
+  <!-- Removed AboutPageReader logic to fix ReferenceError. Voice navigation remains active. -->
     <script>
-    // Auto-read about page content on load
-    window.onload = function() {
-        const aboutText = document.getElementById('about-content').innerText;
-        fetch('/api/text-to-speech', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: aboutText })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.audio) {
-                const audio = new Audio('data:audio/mp3;base64,' + data.audio);
-                audio.play();
-            }
+      document.addEventListener('DOMContentLoaded', () => {
+        window.voiceNavigator = new VoiceNavigator();
+        window.voiceNavigator.addCommands({
+          'go to chat': () => window.voiceNavigator.navigateToChat(),
+          'open chat': () => window.voiceNavigator.navigateToChat(),
+          'chat ai': () => window.voiceNavigator.navigateToChat(),
+          'go to about': () => window.voiceNavigator.navigateToAbout(),
+          'about page': () => window.voiceNavigator.navigateToAbout(),
+          'go home': () => window.voiceNavigator.navigateToHome(),
+          'home page': () => window.voiceNavigator.navigateToHome(),
+          'return back to home page': () => window.voiceNavigator.navigateToHome()
         });
-    };
+        window.voiceNavigator.startListening();
+      });
     </script>
 </body>
 </html>

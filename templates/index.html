@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenAI for Braille - Voice Accessible AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+    <script src="{{ url_for('static', filename='voice-navigation.js') }}?v=20250812"></script>
 </head>
 <body>
+    <!-- Removed home-top-gradient for solid background -->
     <!-- Main Content -->
     <div class="container">
         <!-- Navigation Dots -->
@@ -36,10 +39,27 @@
             <!-- Subtitle with Typewriter Effect -->
             <p class="description">
                 <span class="typewriter" data-text="Voice-Powered AI Assistant for the Visually Impaired">
-                    <span class="cursor">|</span>
+                    <span class="typewriter-text"><span class="typewriter-cursor">|</span></span>
                 </span>
             </p>
 
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var typewriter = document.querySelector('.typewriter-text');
+                var text = 'Voice-Powered AI Assistant for the Visually Impaired';
+                var i = 0;
+                function type() {
+                    if (typewriter && i <= text.length) {
+                        typewriter.innerHTML = text.slice(0, i) + '<span class="typewriter-cursor">|</span>';
+                        i++;
+                        setTimeout(type, 70);
+                    } else if (typewriter) {
+                        typewriter.innerHTML = text + '<span class="typewriter-cursor">|</span>';
+                    }
+                }
+                if (typewriter) type();
+            });
+            </script>
             <!-- Advanced Voice Indicator -->
             <div class="voice-control-center">
                 <div class="voice-spectrum">
@@ -78,26 +98,15 @@
             <!-- Interactive Command Display -->
             <div class="command-display">
                 <div class="command-text">
-                    <span class="command-prompt">$</span>
                     <span class="command-content">Say "OpenAI" to start chatting</span>
                 </div>
                 <div class="command-indicator"></div>
             </div>
-
-            <!-- Manual Navigation Fallback -->
-            <div class="manual-nav" style="margin-top: 20px; text-align: center;">
-                <button onclick="window.location.href='/chat'" 
-                        style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 16px; cursor: pointer; transition: all 0.3s ease;">
-                    Start Chat (Manual)
-                </button>
-                <button onclick="window.location.href='/about'" 
-                        style="background: linear-gradient(135deg, #26d0ce, #1a2980); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 16px; cursor: pointer; margin-left: 16px; box-shadow: 0 4px 16px rgba(38,208,206,0.3); transition: all 0.3s ease; font-weight: bold; letter-spacing: 1px;">
-                    About This Website
-                </button>
-                <button onclick="window.location.href='/login'" 
-                        style="background: linear-gradient(135deg, #764ba2, #26d0ce); color: white; border: none; padding: 12px 24px; border-radius: 25px; font-size: 16px; cursor: pointer; margin-left: 16px; box-shadow: 0 4px 16px rgba(118,75,162,0.3); transition: all 0.3s ease; font-weight: bold; letter-spacing: 1px;">
-                    Login
-                </button>
+            <!-- Navigation Buttons -->
+            <div class="home-nav-btns">
+                <a href="/chat" class="extra-nav-btn">Chat</a>
+                <a href="/about" class="extra-nav-btn">About</a>
+                <a href="/login" class="extra-nav-btn">Login</a>
             </div>
         </div>
 
@@ -150,7 +159,12 @@
             </div>
         </div>
     </div>
-
-    <script src="{{ url_for('static', filename='voice-navigation.js') }}"></script>
+    <!-- voice-navigation.js already loaded in head -->
+    <script>
+        // Status update script with null check
+        if (document.getElementById('status-text')) {
+            // Existing code for status updates
+        }
+    </script>
 </body>
 </html>

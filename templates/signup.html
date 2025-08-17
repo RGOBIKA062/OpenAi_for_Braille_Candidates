@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - OpenAI for Braille Candidates</title>
+    <title>Sign Up - OpenAI for Braille Candidates</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
     <style>
-        .login-container {
+        .signup-container {
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -16,14 +16,14 @@
             padding: 20px;
         }
         
-        .login-card {
+        .signup-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 20px;
             padding: 40px;
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             animation: slideUp 0.6s ease-out;
         }
@@ -39,19 +39,19 @@
             }
         }
         
-        .login-header {
+        .signup-header {
             text-align: center;
             margin-bottom: 30px;
         }
         
-        .login-header h1 {
+        .signup-header h1 {
             color: white;
             font-size: 2.5rem;
             margin-bottom: 10px;
             font-weight: 700;
         }
         
-        .login-header p {
+        .signup-header p {
             color: rgba(255, 255, 255, 0.8);
             font-size: 1.1rem;
         }
@@ -90,7 +90,7 @@
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
         
-        .login-btn {
+        .signup-btn {
             width: 100%;
             padding: 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -104,28 +104,28 @@
             margin-bottom: 15px;
         }
         
-        .login-btn:hover {
+        .signup-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         
-        .login-btn:active {
+        .signup-btn:active {
             transform: translateY(0);
         }
         
-        .signup-link {
+        .login-link {
             text-align: center;
             color: rgba(255, 255, 255, 0.8);
         }
         
-        .signup-link a {
+        .login-link a {
             color: white;
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
         }
         
-        .signup-link a:hover {
+        .login-link a:hover {
             color: #667eea;
         }
         
@@ -169,35 +169,54 @@
             font-size: 0.9rem;
             margin-top: 20px;
         }
+        
+        .password-requirements {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
     <a href="/" class="back-home">← Back to Home</a>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="login-header">
-                <h1>Welcome Back</h1>
-                <p>Sign in to continue your AI journey</p>
+
+    <div class="signup-container">
+        <div class="signup-card">
+            <div class="signup-header">
+                <h1>Join Us</h1>
+                <p>Create your account to start your AI journey</p>
             </div>
+
             <div class="error-message" id="errorMessage"></div>
             <div class="success-message" id="successMessage"></div>
-
-            <form id="loginForm">
+            <form id="signupForm">
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
+                    <div class="password-requirements">
+                        Password should be at least 6 characters long
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
                 </div>
 
-                <button type="submit" class="login-btn">Sign In</button>
+                <button type="submit" class="signup-btn">Create Account</button>
             </form>
 
-            <div class="signup-link">
-                Don't have an account? <a href="/signup">Sign up here</a>
+            <div class="login-link">
+                Already have an account? <a href="/login">Sign in here</a>
             </div>
 
             <div class="voice-hint">
@@ -208,19 +227,32 @@
 
     <script src="{{ url_for('static', filename='voice-navigation.js') }}?v=20250812"></script>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Validation
+            if (password !== confirmPassword) {
+                showMessage('errorMessage', 'Passwords do not match');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('errorMessage', 'Password must be at least 6 characters long');
+                return;
+            }
             
             try {
-                const response = await fetch('/login', {
+                const response = await fetch('/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ username, password })
+                    body: JSON.stringify({ username, email, password })
                 });
                 
                 const data = await response.json();
@@ -248,8 +280,8 @@
             }, 5000);
         }
         
-        // Voice navigation for login page
-        class LoginVoiceNavigator {
+        // Voice navigation for signup page
+        class SignupVoiceNavigator {
             constructor() {
                 this.recognition = null;
                 this.initSpeechRecognition();
@@ -326,24 +358,9 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Avoid double microphones if global navigator is active
             if (!window.voiceNavigator) {
-                new LoginVoiceNavigator();
+                new SignupVoiceNavigator();
             }
         });
-        
-        if (document.getElementById('status-text')) {
-            // Error-free status updates
-            const statusText = document.getElementById('status-text');
-            
-            // Example: Update status text based on certain conditions
-            function updateStatus(text) {
-                statusText.textContent = text;
-            }
-            
-            // Simulate a status update after 2 seconds
-            setTimeout(() => {
-                updateStatus('Ready to use the application');
-            }, 2000);
-        }
     </script>
 </body>
 </html>

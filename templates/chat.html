@@ -1,51 +1,496 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat - OpenAI for Braille</title>
+    <title>AI Chat - OpenAI for Braille Candidates</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
-</head>
-<body>
-    <div class="chat-container">
-        <header class="chat-header">
-            <div class="header-content">
-                <h1>AI Assistant</h1>
-                <div class="status-indicator">
-                    <div class="status-dot listening"></div>
-                    <span id="status-text">Listening...</span>
-                </div>
-            </div>
-        </header>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='favicon.svg') }}">
+    <script src="{{ url_for('static', filename='chat.js') }}?v=20250812"></script>
+    <style>
+        /* Direct scrollbar styling - maximum compatibility */
+        #chatMessages {
+            height: 70vh !important;
+            min-height: 400px !important;
+            overflow-y: scroll !important; /* Force scrollbar to always be visible */
+            overflow-x: hidden !important;
+            display: block !important; /* Block layout for better scrolling */
+            padding: 20px !important;
+            background-color: rgba(0, 0, 0, 0.1) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 8px !important;
+            scrollbar-gutter: stable !important; /* Reserve space for scrollbar */
+        }
         
-        <main class="chat-main">
-            <div class="chat-messages" id="chatMessages">
-                <div class="message ai-message welcome-message">
-                    <div class="message-content">
-                        <p>Hello! I'm your AI assistant. Ask me anything or say "help" for commands.</p>
+        /* Message wrapper for maintaining flex layout */
+        .message-wrapper {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+            gap: 16px !important;
+        }
+        
+        /* Message alignment - keep it simple */
+        .ai-message {
+            align-self: flex-start !important;
+            margin-right: auto !important;
+            margin-left: 0 !important;
+            max-width: 70% !important;
+            margin-bottom: 16px !important;
+        }
+        
+        .user-message {
+            align-self: flex-end !important;
+            margin-left: auto !important;
+            margin-right: 0 !important;
+            max-width: 70% !important;
+            margin-bottom: 16px !important;
+        }
+        
+        /* Ensure scrollbar is visible in all browsers */
+        #chatMessages::-webkit-scrollbar {
+            width: 20px !important; /* Extra wide for better visibility */
+            background-color: rgba(0, 0, 0, 0.2) !important;
+        }
+        
+        #chatMessages::-webkit-scrollbar-thumb {
+            background-color: rgba(255, 255, 255, 0.7) !important; /* Brighter for visibility */
+            border-radius: 10px !important;
+            border: 3px solid rgba(0, 0, 0, 0.2) !important;
+            min-height: 60px !important; /* Taller for easier grabbing */
+        }
+        
+        #chatMessages::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        /* Firefox scrollbar styling */
+        #chatMessages {
+            scrollbar-width: thin !important;
+            scrollbar-color: rgba(255, 255, 255, 0.6) rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* Voice status animation */
+        .voice-rising-bar {
+            display: flex;
+            align-items: flex-end;
+            height: 20px;
+            margin-top: 4px;
+        }
+        
+        .rising {
+            width: 4px;
+            height: 100%;
+            margin: 0 2px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 2px;
+            animation: rise 1s infinite;
+        }
+        
+        @keyframes rise {
+            0%, 100% {
+                transform: scaleY(1);
+            }
+            50% {
+                transform: scaleY(1.5);
+            }
+        }
+    </style>
+</head>
+<body class="chat-page">
+    <div class="chat-container">
+        <!-- Sidebar -->
+        <aside class="chat-sidebar" aria-label="Conversation history sidebar">
+            <div class="sidebar-header">
+                <h3>Chat History</h3>
+                <button id="newChatBtn" class="new-chat-btn" type="button">+ New Chat</button>
+            </div>
+            <nav class="chat-history-list" id="chatHistoryList" aria-live="polite">
+                <!-- Chat history will be loaded here -->
+            </nav>
+            <div class="sidebar-footer">
+                <a href="/logout" class="logout-btn">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main" aria-label="Chat conversation area">
+            <div class="chat-header">
+                <div class="header-left">
+                    <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle sidebar" type="button">☰</button>
+                    <h2>AI Assistant</h2>
                     </div>
-                    <div class="message-timestamp">Just now</div>
+                <div class="header-right">
+                    <span class="status-text" id="statusIndicator">Listening...</span>
                 </div>
             </div>
-            
-            <div class="voice-controls">
-                <div class="voice-visualizer">
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
-                    <div class="wave"></div>
+
+            <div class="chat-messages" id="chatMessages" aria-live="polite" tabindex="0" role="log">
+                <div class="welcome-message ai-message">
+                    <div class="message-content">
+                        <p>👋 Welcome! I'm your AI assistant designed specifically for visually impaired users. I can help you with:</p>
+                        <ul>
+                            <li>Answering questions with concise, accurate responses</li>
+                            <li>Providing detailed explanations when you ask for more</li>
+                            <li>Helping with navigation and voice commands</li>
+                            <li>Remembering our conversation history</li>
+                        </ul>
+                        <p>Just speak naturally or type your questions. Say "help" for voice commands.</p>
+                    </div>
                 </div>
-                
-                <div class="control-info">
-                    <p>Voice Commands: "Stop", "Help", "Elaborate [topic]"</p>
+            </div>
+
+            <div class="voice-controls">
+                <div class="voice-status" id="voiceStatus">
+                    <div class="status-dot"></div>
+                    <span>Listening...</span>
+                </div>
+                <div class="voice-rising-bar">
+                    <div class="rising"></div>
+                    <div class="rising"></div>
+                    <div class="rising"></div>
+                    <div class="rising"></div>
+                    <div class="rising"></div>
                 </div>
             </div>
         </main>
     </div>
-    
-    <script src="{{ url_for('static', filename='chat.js') }}"></script>
+
+    <!-- chat.js already loaded in head to ensure classes exist before inline scripts -->
+    <script>
+        // Track and highlight the active conversation in the sidebar
+        window.activeConversationId = null;
+        window.setActiveConversationId = function(id) {
+            window.activeConversationId = id;
+            try { sessionStorage.setItem('activeConversationId', id || ''); } catch (e) {}
+            highlightHistoryActiveItem();
+        };
+
+        function highlightHistoryActiveItem() {
+            const items = document.querySelectorAll('.history-item');
+            items.forEach(item => {
+                if (item.dataset && item.dataset.conversationId === window.activeConversationId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        // Sidebar toggle functionality
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.chat-sidebar').classList.toggle('collapsed');
+            document.querySelector('.chat-main').classList.toggle('expanded');
+        });
+
+        // New chat functionality
+        document.getElementById('newChatBtn').addEventListener('click', function() {
+            console.log("Starting new conversation");
+            // Show welcome message immediately
+            document.getElementById('chatMessages').innerHTML = `
+                <div class=\"welcome-message ai-message\" style=\"align-self: flex-start; margin-right: auto; background-color: rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 10px 15px;\">
+                    <div class=\"message-content\">
+                        <p>👋 Welcome! I'm your AI assistant designed specifically for visually impaired users. I can help you with:</p>
+                        <ul>
+                            <li>Answering questions with concise, accurate responses</li>
+                            <li>Providing detailed explanations when you ask for more</li>
+                            <li>Helping with navigation and voice commands</li>
+                            <li>Remembering our conversation history</li>
+                        </ul>
+                        <p>Just speak naturally or type your questions. Say \"help\" for voice commands.</p>
+                    </div>
+                </div>
+            `;
+            
+            // Clear the active conversation ID
+            window.activeConversationId = null;
+            
+            // Notify the server
+            fetch('/api/new_conversation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.conversation_id) {
+                    console.log("New conversation created successfully, ID:", data.conversation_id);
+                    window.setActiveConversationId(data.conversation_id);
+                    // Refresh the history to show the new conversation
+                    loadChatHistory();
+                } else {
+                    console.error("Failed to create new conversation:", data.message || "Unknown error");
+                }
+            })
+            .catch(error => {
+                console.error("Error creating new conversation:", error);
+            });
+        });
+
+        // Load chat history on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Automatically start a new chat on page load
+            document.getElementById('chatMessages').innerHTML = `
+                <div class=\"welcome-message ai-message\" style=\"align-self: flex-start; margin-right: auto; background-color: rgba(0, 0, 0, 0.2); border-radius: 8px; padding: 10px 15px;\">
+                    <div class=\"message-content\">
+                        <p>👋 Welcome! I'm your AI assistant designed specifically for visually impaired users. I can help you with:</p>
+                        <ul>
+                            <li>Answering questions with concise, accurate responses</li>
+                            <li>Providing detailed explanations when you ask for more</li>
+                            <li>Helping with navigation and voice commands</li>
+                            <li>Remembering our conversation history</li>
+                        </ul>
+                        <p>Just speak naturally or type your questions. Say \"help\" for voice commands.</p>
+                    </div>
+                </div>
+            `;
+            fetch('/api/new_conversation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.conversation_id) {
+                    window.setActiveConversationId(data.conversation_id);
+                    loadChatHistory();
+                    loadConversation(data.conversation_id);
+                }
+            });
+            // Set up periodic refresh of chat history
+            setInterval(loadChatHistory, 10000); // Refresh every 10 seconds
+        });
+
+        function loadChatHistory() {
+            console.log("Loading chat history...");
+            fetch('/api/chat_history')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log("Chat history loaded:", data.history.length, "conversations");
+                        displayChatHistory(data.history);
+                    } else {
+                        console.error("Failed to load chat history:", data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading chat history:', error);
+                });
+        }
+
+        function displayChatHistory(history) {
+            const historyList = document.getElementById('chatHistoryList');
+            historyList.innerHTML = '';
+            
+            if (!history || history.length === 0) {
+                historyList.innerHTML = '<div class="no-history">No chat history yet</div>';
+                return;
+            }
+            
+            console.log("Displaying", history.length, "conversations");
+            
+            history.forEach(conversation => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.dataset.conversationId = conversation.conversation_id;
+                
+                // Format the title to ensure it's not empty or too long
+                const displayTitle = conversation.title ? 
+                    (conversation.title.length > 25 ? conversation.title.substring(0, 25) + '...' : conversation.title) : 
+                    'Untitled Conversation';
+                
+                historyItem.innerHTML = `
+                    <div class="history-title">${displayTitle}</div>
+                    <div class="history-date">${new Date(conversation.created_at).toLocaleString()}</div>
+                `;
+                
+                historyItem.addEventListener('click', () => {
+                    console.log("Selected conversation:", conversation.conversation_id);
+                    window.setActiveConversationId(conversation.conversation_id);
+                    // Inform backend of the active conversation for contextual replies
+                    fetch('/api/set_current_conversation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ conversation_id: conversation.conversation_id })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            loadConversation(conversation.conversation_id);
+                        } else {
+                            console.error("Failed to set conversation:", data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error setting conversation:", error);
+                    });
+                });
+                
+                historyList.appendChild(historyItem);
+            });
+
+            // Apply active highlight after list is rendered
+            highlightHistoryActiveItem();
+
+            // Auto-select most recent conversation if none active
+            if (!window.activeConversationId && history.length > 0) {
+                const latestId = history[0].conversation_id;
+                window.setActiveConversationId(latestId);
+                fetch('/api/set_current_conversation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ conversation_id: latestId })
+                }).finally(() => {
+                    loadConversation(latestId);
+                });
+            }
+        }
+
+        function loadConversation(conversationId) {
+            fetch(`/api/conversation/${conversationId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.setActiveConversationId(conversationId);
+                        displayConversation(data.messages);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading conversation:', error);
+                });
+        }
+
+        function displayConversation(messages) {
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            // Clear the container and create a wrapper for flex layout
+            messagesContainer.innerHTML = '';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'message-wrapper';
+            wrapper.style.display = 'flex';
+            wrapper.style.flexDirection = 'column';
+            wrapper.style.width = '100%';
+            wrapper.style.gap = '16px';
+            messagesContainer.appendChild(wrapper);
+            
+            console.log("Displaying", messages.length, "messages");
+            
+            if (!messages || messages.length === 0) {
+                // If no messages, show a welcome message
+                const welcomeDiv = document.createElement('div');
+                welcomeDiv.className = 'message ai-message';
+                welcomeDiv.innerHTML = `
+                    <div class="message-content">
+                        <p>👋 This is the start of a new conversation. How can I help you today?</p>
+                    </div>
+                `;
+                wrapper.appendChild(welcomeDiv);
+                return;
+            }
+            
+            messages.forEach(message => {
+                if (!message.message || !message.sender) {
+                    console.warn("Invalid message format:", message);
+                    return;
+                }
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.sender}-message`;
+                
+                // Apply correct alignment styles
+                if (message.sender === 'ai') {
+                    messageDiv.style.alignSelf = 'flex-start';
+                    messageDiv.style.marginRight = 'auto';
+                    messageDiv.style.marginLeft = '0';
+                    messageDiv.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+                } else {
+                    messageDiv.style.alignSelf = 'flex-end';
+                    messageDiv.style.marginLeft = 'auto';
+                    messageDiv.style.marginRight = '0';
+                    messageDiv.style.backgroundColor = 'rgba(0, 100, 255, 0.2)';
+                }
+                
+                messageDiv.style.maxWidth = '70%';
+                messageDiv.style.marginBottom = '16px';
+                messageDiv.style.padding = '10px 15px';
+                messageDiv.style.borderRadius = '8px';
+                
+                // Format timestamp if available
+                let timestampStr = '';
+                if (message.timestamp) {
+                    try {
+                        const timestamp = new Date(message.timestamp);
+                        timestampStr = timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    } catch (e) {
+                        console.warn("Invalid timestamp:", message.timestamp);
+                        timestampStr = '';
+                    }
+                }
+                
+                messageDiv.innerHTML = `
+                    <div class="message-content">
+                        <p>${message.message}</p>
+                    </div>
+                    ${timestampStr ? `<div class="message-timestamp" style="font-size: 0.8em; opacity: 0.7;">${timestampStr}</div>` : ''}
+                `;
+                
+                wrapper.appendChild(messageDiv);
+            });
+            
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Expose loader for chat.js to call after new conversation start
+        window.loadChatHistory = loadChatHistory;
+
+        // Check and render chat history if element exists
+        if (document.getElementById('chatHistoryList')) {
+            loadChatHistory();
+        }
+    </script>
+    <script>
+        // Simple embedded scrollbar script - focused only on essential functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                console.log("Initializing scrollbar...");
+                const chatMessages = document.getElementById('chatMessages');
+                if (!chatMessages) {
+                    console.error("Chat messages container not found!");
+                    return;
+                }
+                
+                // Force scrollbar to be visible
+                chatMessages.style.overflowY = 'scroll';
+                
+                // Create global scroll function
+                window.scrollChatToBottom = function() {
+                    if (chatMessages) {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                        console.log("Scrolled to bottom, height:", chatMessages.scrollHeight);
+                    }
+                };
+                
+                // Initial scroll to bottom
+                window.scrollChatToBottom();
+                
+                // Watch for changes and keep scrolled to bottom
+                const observer = new MutationObserver(function() {
+                    window.scrollChatToBottom();
+                });
+                
+                // Observe the chat container for any changes
+                observer.observe(chatMessages, { 
+                    childList: true, 
+                    subtree: true,
+                    attributes: false,
+                    characterData: false
+                });
+                
+                console.log("Scrollbar successfully initialized");
+            }, 800); // Wait longer to ensure everything is loaded
+        });
+        
+    // chat.js auto-initializes VoiceChat on DOMContentLoaded. Avoid initializing VoiceNavigator on chat page to prevent mic conflicts.
+    </script>
 </body>
 </html>
